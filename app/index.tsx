@@ -52,7 +52,7 @@ export default function index() {
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity> 
-                <Link href={"/signuppage"}>
+                <Link href="../signuppage">
                     <Text>
                         Signup
                     </Text>

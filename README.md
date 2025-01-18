@@ -21,10 +21,11 @@ NomNom is an application designed to enhance social interactions by allowing fri
 
 ## Setup
 1. Clone the Repository:
-   ```sh
-   git clone https://github.com/yourusername/NomNom.git
-   cd NomNom
-   ```
+```sh
+git clone https://github.com/yourusername/NomNom.git
+cd NomNom
+```
+
 2. To run the program, use the following command:
 ```sh
 npx expo start
