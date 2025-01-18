@@ -42,7 +42,7 @@ export default function ProfileScreen() {
     </View>
     <View style={tw`flex items-center`}>
     <TouchableOpacity > 
-      <Link href="/recommendations" style={tw`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded max-w-40 align-center`}>
+      <Link href="../recommendations" style={tw`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded max-w-40 align-center`}>
       Recommendations
       </Link>
     </TouchableOpacity>

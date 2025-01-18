@@ -12,7 +12,7 @@ import {Stack} from "expo-router"
 export default function RootLayout() {
   const [user,setUser] = useState<User | null>(null);
   useEffect(()=>{
-    onAuthStateChanged(firebase_auth , (user)=>{
+    onAuthStateChanged(firebase_auth , (user: any)=>{
       console.log('user', user)
       setUser(user);
     })

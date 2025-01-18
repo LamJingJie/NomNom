@@ -21,7 +21,7 @@ export default function index() {
         try{
             const reponse = await signInWithEmailAndPassword(auth,email,password);
             console.log(reponse);
-            router.replace('/home')
+            router.replace('../home')
         } catch (error:any) {
             console.log(error);
             alert("Sign in failed:" + error.message)
@@ -44,7 +44,7 @@ export default function index() {
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity> 
-                <Link href={"/signuppage"}>
+                <Link href="../signuppage">
                     <Text>
                         Signup
                     </Text>
