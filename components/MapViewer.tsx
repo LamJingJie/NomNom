@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button } from 'react-native'
+import { View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Modal } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import MapView, { MapMarker, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapStyle from '@/constants/MapViewerStyle.json';
@@ -6,6 +6,7 @@ import * as Location from 'expo-location'
 
 // Context
 import { LocationContext } from '@/context/LocationContext';
+import { recommendations } from '@/assets/restaurantmarkers';
 
 
 export default function MapViewer() {
@@ -27,8 +28,6 @@ export default function MapViewer() {
 
   // Refs
   const mapRef = useRef<MapView>(null);
-
-
 
   useEffect(() => {
 
@@ -74,6 +73,28 @@ export default function MapViewer() {
     setMapKey(mapKey + 1);
   }
 
+
+  const [selectedRestaurant, setSelectedRestaurant] = useState<{
+    coordinate: { latitude: number; longitude: number };
+    place_id: string;
+    name: string;
+    cuisine: string;
+    friendList: { friendName: string }[];
+    friendListReview: { friendName: string; review: string; rating: boolean }[];
+  } | null>(null);
+
+  const handleMarkerPress = (place_id: string) => {
+    // Find matching restaurants in all reccommendations, and display at selected restaurant
+    const matchingReviews = recommendations.find(
+      (rec) => rec.place_id === place_id
+    );
+    if (matchingReviews) {
+      setSelectedRestaurant(matchingReviews);
+    }
+  };
+
+  const closeModal = () => setSelectedRestaurant(null);
+
   return (
 
     <View style={styles.container}>
@@ -93,7 +114,7 @@ export default function MapViewer() {
         zoomEnabled={true} // Enable zoom
       >
         {places.map((place: any, index: number) => {
-          console.log(`Rendering Marker: ${place.name}, Lat: ${place.geometry.location.lat}, Lng: ${place.geometry.location.lng}`);
+          console.log(`Rendering Marker: ${place.place_id} ,${place.name}, Lat: ${place.geometry.location.lat}, Lng: ${place.geometry.location.lng}`);
           return (
             <Marker
               key={place.place_id}
@@ -101,9 +122,17 @@ export default function MapViewer() {
                 latitude: place.geometry.location.lat,
                 longitude: place.geometry.location.lng,
               }}
+              onPress={() => handleMarkerPress(place.place_id)}
               title={place.name}
-              pinColor="#00FF00" //green
-            />
+            // pinColor="#00FF00" //green
+            >
+              
+              <Image 
+              source={require('../assets/images/store.png')}   
+              style={{ width: 19, height: 19}}
+              resizeMode= 'contain' 
+              />
+            </Marker>
           );
         })}
 
@@ -117,6 +146,60 @@ export default function MapViewer() {
         />
 
       </MapView>
+
+      {selectedRestaurant && (
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={!!selectedRestaurant}
+          onRequestClose={closeModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Friend Reviews</Text>
+              <TouchableOpacity onPress={() => console.log('Navigate to another page')} style={{ position: 'absolute', right: 10, top: 10 }}>
+                <Image
+                  source={require('../assets/images/plus.png')}
+                  style={{ width: 33, height: 33, marginRight: 10, marginTop: 7 }}
+                  resizeMode='contain'
+                />
+              </TouchableOpacity>
+              <FlatList
+                data={selectedRestaurant.friendListReview}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <View style={styles.reviewItem}>
+                        <TouchableOpacity onPress={() => console.log(`Opening review for ${item.friendName}`)} >
+                        <View style={styles.reviewItem}>
+                          <Text style={styles.friendName}>{item.friendName}</Text>
+                          <Text style={styles.review}>{item.review}</Text>
+                          <Text style={styles.rating}>Rating: {item.rating ? "Good" : "Bad"}</Text>
+                        </View>
+                            {item.rating ? (
+                            <Image
+                              source={require('../assets/images/thumbsup.png')}
+                              style={{ width: 30, height: 30, position: 'absolute', right: 15, top: 19 }}
+                              resizeMode='contain'
+                            />
+                            ) : (
+                            <Image
+                              source={require('../assets/images/thumbsdown.png')}
+                              style={{ width: 30, height: 30, position: 'absolute', right: 15, top: 19 }}
+                              resizeMode='contain'
+                            />
+                            )}
+                        </TouchableOpacity>
+                    
+                  </View>
+                )}
+              />
+              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
 
   )
@@ -135,5 +218,46 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  reviewItem: {
+    backgroundColor: '#f2f2f2',
+    margin: 7,
+  },
+  friendName: {
+    fontWeight: 'bold',
+  },
+  review: {
+    fontStyle: 'italic',
+  },
+  rating: {
+    color: 'gray',
+  },
+  closeButton: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#ffc663',
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
