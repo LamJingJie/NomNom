@@ -126,11 +126,11 @@ export default function MapViewer() {
               title={place.name}
             // pinColor="#00FF00" //green
             >
-              
-              <Image 
-              source={require('../assets/images/store.png')}   
-              style={{ width: 19, height: 19}}
-              resizeMode= 'contain' 
+
+              <Image
+                source={require('../assets/images/store.png')}
+                style={{ width: 19, height: 19 }}
+                resizeMode='contain'
               />
             </Marker>
           );
@@ -169,27 +169,27 @@ export default function MapViewer() {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                   <View style={styles.reviewItem}>
-                        <TouchableOpacity onPress={() => console.log(`Opening review for ${item.friendName}`)} >
-                        <View style={styles.reviewItem}>
-                          <Text style={styles.friendName}>{item.friendName}</Text>
-                          <Text style={styles.review}>{item.review}</Text>
-                          <Text style={styles.rating}>Rating: {item.rating ? "Good" : "Bad"}</Text>
-                        </View>
-                            {item.rating ? (
-                            <Image
-                              source={require('../assets/images/thumbsup.png')}
-                              style={{ width: 30, height: 30, position: 'absolute', right: 15, top: 19 }}
-                              resizeMode='contain'
-                            />
-                            ) : (
-                            <Image
-                              source={require('../assets/images/thumbsdown.png')}
-                              style={{ width: 30, height: 30, position: 'absolute', right: 15, top: 19 }}
-                              resizeMode='contain'
-                            />
-                            )}
-                        </TouchableOpacity>
-                    
+                    <TouchableOpacity onPress={() => console.log(`Opening review for ${item.friendName}`)} >
+                      <View style={styles.reviewItem}>
+                        <Text style={styles.friendName}>{item.friendName}</Text>
+                        <Text style={styles.review}>{item.review}</Text>
+                        <Text style={styles.rating}>Rating: {item.rating ? "Good" : "Bad"}</Text>
+                      </View>
+                      {item.rating ? (
+                        <Image
+                          source={require('../assets/images/thumbsup.png')}
+                          style={{ width: 30, height: 30, position: 'absolute', right: 15, top: 19 }}
+                          resizeMode='contain'
+                        />
+                      ) : (
+                        <Image
+                          source={require('../assets/images/thumbsdown.png')}
+                          style={{ width: 30, height: 30, position: 'absolute', right: 15, top: 19 }}
+                          resizeMode='contain'
+                        />
+                      )}
+                    </TouchableOpacity>
+
                   </View>
                 )}
               />
@@ -201,6 +201,7 @@ export default function MapViewer() {
         </Modal>
       )}
     </View>
+
 
   )
 }

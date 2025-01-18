@@ -1,6 +1,6 @@
 // Sample recommendations data
 export const recommendations = [
-    {
+  {
     coordinate: {
       latitude: 1.3521,
       longitude: 103.8198,
