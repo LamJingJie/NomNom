@@ -9,6 +9,7 @@ import {getDatabase} from 'firebase/database'
 const firebaseConfig = {
   apiKey: "AIzaSyAfe7EdMo_ZZ7OxXYFF87EE16kF1GS6Vzg",
   authDomain: "nomnom-b0c14.firebaseapp.com",
+  databaseURL: "https://nomnom-b0c14-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "nomnom-b0c14",
   storageBucket: "nomnom-b0c14.firebasestorage.app",
   messagingSenderId: "274649174121",

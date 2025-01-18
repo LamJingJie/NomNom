@@ -1,14 +1,19 @@
-import {Image, View, Text ,StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
+import {Image, View, Text ,StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import React, { useState  } from 'react'
 import { Link, useRouter  } from 'expo-router'
 import {firebase_auth} from '../config/firebase'
 import { style } from 'twrnc';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-
+import {setItem ,getItem} from "../utils/AsyncStorage";
+import { get } from 'firebase/database';
+import home from './(tabs)/home';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {IdContext} from '@/context/IdContext'
 export default function index() {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [loading , setLoading] = useState(false);
+    const [Id , setId] = useState<any>(null);
     const auth = firebase_auth;
     const router = useRouter()
     const signIn = async () => {
@@ -20,19 +25,6 @@ export default function index() {
         } catch (error:any) {
             console.log(error);
             alert("Sign in failed:" + error.message)
-        } finally{
-            setLoading(false);
-        }
-    }
-    const signUp = async () => {
-        setLoading(true);
-        try{
-            const reponse = await createUserWithEmailAndPassword(auth,email,password);
-            console.log(reponse);
-            alert('Check your emails!')
-        } catch (error:any) {
-            console.log(error);
-            alert("Registration failed:" + error.message)
         } finally{
             setLoading(false);
         }

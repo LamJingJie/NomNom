@@ -20,6 +20,16 @@ export default function singuppage() {
         if (password == passwordcheck){
             try{
                 const reponse = await createUserWithEmailAndPassword(auth,email,password);
+                const newkey = push(child(ref(db),'users')).key
+
+                set(ref(db,"users/" + newkey),{
+                    id:newkey,
+                    username:username,
+                }).then(()=>{
+                    alert("data submited")
+                }).catch((error) =>{
+                    alert(error);
+                });
                 alert('Check your emails!')
             } catch (error:any) {
                 console.log(error);
