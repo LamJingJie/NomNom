@@ -21,10 +21,12 @@ export default function singuppage() {
             try{
                 const reponse = await createUserWithEmailAndPassword(auth,email,password);
                 const newkey = push(child(ref(db),'users')).key
+                const sanitizedEmail = email.replace(/\./g, ','); // Replace `.` with `,`
 
                 set(ref(db,"users/" + newkey),{
                     id:newkey,
                     username:username,
+                    email:email,
                 }).then(()=>{
                     alert("data submited")
                 }).catch((error) =>{

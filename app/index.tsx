@@ -1,27 +1,38 @@
 import {Image, View, Text ,StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import React, { useState  } from 'react'
 import { Link, useRouter  } from 'expo-router'
-import {firebase_auth} from '../config/firebase'
+import {db, firebase_auth} from '../config/firebase'
 import { style } from 'twrnc';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import {setItem ,getItem} from "../utils/AsyncStorage";
-import { get } from 'firebase/database';
+import { get, set, ref, query, equalTo, orderByChild } from 'firebase/database';
 import home from './(tabs)/home';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {IdContext} from '@/context/IdContext'
+
 export default function index() {
+
+    // State
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [loading , setLoading] = useState(false);
+    const [user, setUser] = useState<any | null>(null);
+
     const [Id , setId] = useState<any>(null);
     const auth = firebase_auth;
     const router = useRouter()
     const signIn = async () => {
         setLoading(true);
         try{
-            const reponse = await signInWithEmailAndPassword(auth,email,password);
-            console.log(reponse);
-            router.replace('../home')
+            const response = await signInWithEmailAndPassword(auth,email,password);
+            const usersRef = ref(db, "users");
+            const emailQuery = query(usersRef, orderByChild("email"), equalTo(response.user.email));
+            const snapshot = await get(emailQuery);
+
+            // console.log(Object.keys(snapshot.val())[0]);
+            AsyncStorage.setItem('userId', Object.keys(snapshot.val())[0]);
+
+            router.replace('../home');
+
         } catch (error:any) {
             console.log(error);
             alert("Sign in failed:" + error.message)

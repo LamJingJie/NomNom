@@ -7,12 +7,17 @@ import * as Location from 'expo-location'
 // Context
 import { LocationContext } from '@/context/LocationContext';
 import { recommendations } from '@/assets/restaurantmarkers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function MapViewer() {
 
   const { location, setLocation } = useContext(LocationContext);
   const google_places_api = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY;
+
+
+
+
 
   // State
   const [places, setPlaces] = useState([]);
@@ -50,6 +55,10 @@ export default function MapViewer() {
     }
   }, [location]);
 
+  useEffect(() => {
+    handleRerender();
+  }, [places]); 
+
 
 
   const fetchNearbyPlaces = async (lat: number, lng: number) => {
@@ -69,6 +78,7 @@ export default function MapViewer() {
     }
   }
 
+  // Rerender the google map api to show the marker properly
   const handleRerender = () => {
     setMapKey(mapKey + 1);
   }
@@ -96,7 +106,6 @@ export default function MapViewer() {
   const closeModal = () => setSelectedRestaurant(null);
 
   return (
-
     <View style={styles.container}>
 
       <MapView
@@ -136,14 +145,14 @@ export default function MapViewer() {
           );
         })}
 
-        <Marker
-          coordinate={{
-            latitude: location?.latitude,
-            longitude: location?.longitude,
-          }}
-          title="You are here"
-          pinColor="red"
-        />
+          <Marker
+            coordinate={{
+              latitude: location?.latitude,
+              longitude: location?.longitude,
+            }}
+            title="You are here"
+            pinColor="red"
+          />
 
       </MapView>
 

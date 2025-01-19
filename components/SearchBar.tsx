@@ -38,8 +38,6 @@ export default function SearchBar({searchedLocation}: any) {
                         type: 'establishment',
                     }}
                     enablePoweredByContainer={false}
-
-                    // fetchDetails={true}
                     renderRow={rowData => {
                         return (
                             <View>

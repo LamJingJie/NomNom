@@ -11,11 +11,26 @@ import { useContext, useEffect, useState } from "react";
 
 // Context
 import { LocationContext } from '@/context/LocationContext';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
 
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  let userId: any = null;
+
+  const getData = async (key: any) => {
+    try {
+        const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
+            return value;
+        }
+        return null;
+    } catch (error) {
+        console.error("Error reading data:", error);
+    }
+};
 
   useEffect(() => {
     async function getCurrentLocation() {
@@ -40,6 +55,13 @@ export default function Home() {
 
     const default_coords = { "latitude": 1.3521, "longitude": 103.8198 }; // center of singapore
     setLocation(default_coords);
+
+    getData('userId').then((value) => {
+      if (value) {
+        console.log('value', value)
+        userId = value;
+      }
+    });
   }, [])
 
   let text = 'Waiting...';
